@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+
+    <title>Spring Extplorer | </title>
+  </head>
+  <body>
+    <div class="container">
+             <div class="row mt-2">
+                 <div class="col-md-12">
+                     <div class="alert" id="alert">
+                      
+                    </div>
+                </div>
+            </div>
+            <form class="form-horizontal" method="POST" enctype="multipart/form-data" id="fileUploadForm">
+                <div class="form-group">
+                    <div class="col-sm-5">
+                        <input type="file" multiple="multiple" id="selectedFiles" name="files" style="display:none;" />
+                        <input type="hidden" name="uploadDir" value="/" />
+                    </div>
+                </div>
+                
+                <div class="form-group"> 
+                    <div class="col-sm-offset-2 col-sm-10">
+                      <button type="button" class="btn btn-secondary" id="btnDelete" disabled>Delete</button>
+                      <button type="button" class="btn btn-primary" id="btnUpload">Upload</button>
+                    </div>
+                </div>
+            </form>
+            <hr/>
+            <nav aria-label="breadcrumb" >
+              <ol class="breadcrumb" id="breadcrumb">
+              </ol>
+            </nav>
+            <hr/>
+            <table class="table table-sm table-dark" id="filesTable">
+                <thead>
+                    <tr>
+                      <th><input type="checkbox" id="checkAll"></input></th>
+                      <th style="width: 50%">Name</th>
+                      <th>Size</th>
+                      <th>Type</th>
+                      <th>Modified</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                </tbody>
+            </table>
+        </div>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script
+              src="http://code.jquery.com/jquery-3.3.1.min.js"
+              integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+              crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+  
+    <script src="/js/extplorer.js"></script>
+
+  </body>
+</html>
