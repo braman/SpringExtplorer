@@ -1,4 +1,4 @@
-package kz.ramanqul.upwork.mark_joachim.SpringExtplorer.exception;
+package eu.tarienna.springextplorer.exception;
 
 /**
  * Generic exception class which represents file system error 

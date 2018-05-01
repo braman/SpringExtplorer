@@ -1,4 +1,4 @@
-package kz.ramanqul.upwork.mark_joachim.SpringExtplorer.service;
+package eu.tarienna.springextplorer.service;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -28,11 +28,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.thymeleaf.util.StringUtils;
 
-import kz.ramanqul.upwork.mark_joachim.SpringExtplorer.conf.Constants;
-import kz.ramanqul.upwork.mark_joachim.SpringExtplorer.dto.FileInfoDTO;
-import kz.ramanqul.upwork.mark_joachim.SpringExtplorer.exception.FileDeleteException;
-import kz.ramanqul.upwork.mark_joachim.SpringExtplorer.exception.FileStoreException;
-import kz.ramanqul.upwork.mark_joachim.SpringExtplorer.exception.FileUnzipException;
+import eu.tarienna.springextplorer.conf.Constants;
+import eu.tarienna.springextplorer.dto.FileInfoDTO;
+import eu.tarienna.springextplorer.exception.FileDeleteException;
+import eu.tarienna.springextplorer.exception.FileStoreException;
+import eu.tarienna.springextplorer.exception.FileUnzipException;
 
 @Service
 public class StorageService {

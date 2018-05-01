@@ -1,4 +1,4 @@
-package kz.ramanqul.upwork.mark_joachim.SpringExtplorer;
+package eu.tarienna.springextplorer;
 
 import javax.annotation.Resource;
 
@@ -6,7 +6,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import kz.ramanqul.upwork.mark_joachim.SpringExtplorer.service.StorageService;
+import eu.tarienna.springextplorer.service.StorageService;
 
 @SpringBootApplication
 public class SpringExtplorerApplication implements CommandLineRunner {

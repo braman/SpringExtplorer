@@ -1,4 +1,4 @@
-package kz.ramanqul.upwork.mark_joachim.SpringExtplorer.dto;
+package eu.tarienna.springextplorer.dto;
 
 import java.util.Date;
 

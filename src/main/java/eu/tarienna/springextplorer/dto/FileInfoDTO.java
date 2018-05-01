@@ -1,10 +1,10 @@
-package kz.ramanqul.upwork.mark_joachim.SpringExtplorer.dto;
+package eu.tarienna.springextplorer.dto;
 
 import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-import kz.ramanqul.upwork.mark_joachim.SpringExtplorer.conf.Constants;
+import eu.tarienna.springextplorer.conf.Constants;
 
 public class FileInfoDTO {
 

@@ -1,4 +1,4 @@
-package kz.ramanqul.upwork.mark_joachim.SpringExtplorer.controller;
+package eu.tarienna.springextplorer.controller;
 
 import java.util.Date;
 
@@ -13,8 +13,8 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import kz.ramanqul.upwork.mark_joachim.SpringExtplorer.dto.ErrorDetails;
-import kz.ramanqul.upwork.mark_joachim.SpringExtplorer.exception.FileStoreException;
+import eu.tarienna.springextplorer.dto.ErrorDetails;
+import eu.tarienna.springextplorer.exception.FileStoreException;
 
 @ControllerAdvice
 @RestController

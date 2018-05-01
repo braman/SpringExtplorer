@@ -148,12 +148,14 @@ function loadFiles(path) {
 				
 				$("#filesTable tbody").append(`
 				    <tr>
-						<td><input type="checkbox" onClick='checkboxClicked(this)'></input></td>
 						<td>
-							<a class="file-item ${file.isFile ? '' : 'font-weight-bold'}" href="${file.isFile ? filePath : '#'}" onClick="loadFiles('${relativePath}')">
+							<input type="checkbox" onClick='checkboxClicked(this)'></input>
+						</td>
+						<td>
+							<a  ${ file.isFile ? ` href="${filePath}" ` : ` href="#" class="font-weight-bold" onClick="loadFiles('${relativePath}')" `} >
 								${file.name}
 							</a>
-							</td>
+						</td>
 						<td>${convertSize(file.fileSize)}</td>
 						<td>${file.isFile ? 'FILE' : 'FOLDER'}</td>
 						<td>${file.lastModified}</td>

@@ -1,4 +1,4 @@
-package kz.ramanqul.upwork.mark_joachim.SpringExtplorer.exception;
+package eu.tarienna.springextplorer.exception;
 
 /**
  * Exception class which represents error for deletion failure

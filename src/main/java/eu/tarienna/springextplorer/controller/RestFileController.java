@@ -1,9 +1,10 @@
-package kz.ramanqul.upwork.mark_joachim.SpringExtplorer.controller;
+package eu.tarienna.springextplorer.controller;
 
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,12 +22,12 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.HandlerMapping;
 
-import kz.ramanqul.upwork.mark_joachim.SpringExtplorer.conf.Constants;
-import kz.ramanqul.upwork.mark_joachim.SpringExtplorer.dto.FileInfoDTO;
-import kz.ramanqul.upwork.mark_joachim.SpringExtplorer.exception.FileDeleteException;
-import kz.ramanqul.upwork.mark_joachim.SpringExtplorer.exception.FileStoreException;
-import kz.ramanqul.upwork.mark_joachim.SpringExtplorer.exception.FileUnzipException;
-import kz.ramanqul.upwork.mark_joachim.SpringExtplorer.service.StorageService;
+import eu.tarienna.springextplorer.conf.Constants;
+import eu.tarienna.springextplorer.dto.FileInfoDTO;
+import eu.tarienna.springextplorer.exception.FileDeleteException;
+import eu.tarienna.springextplorer.exception.FileStoreException;
+import eu.tarienna.springextplorer.exception.FileUnzipException;
+import eu.tarienna.springextplorer.service.StorageService;
 
 @RestController
 @RequestMapping("api")
@@ -44,7 +45,9 @@ public class RestFileController {
             try {
                 storageService.store(file, uploadDir);
                 //unzip file
-                if (Constants.MIME_APPLICATION_ZIP.equalsIgnoreCase(file.getContentType())) {
+                if (StringUtils.equalsAnyIgnoreCase(file.getContentType(), 
+                        Constants.MIME_APPLICATION_ZIP, 
+                        Constants.MIME_APPLICATION_X_ZIP_COMPRESSED)) {
                     storageService.unzip(file, uploadDir);
                 }
             } catch (FileUnzipException e) {
