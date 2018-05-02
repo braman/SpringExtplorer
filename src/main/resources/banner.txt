@@ -1,0 +1,10 @@
+  ${AnsiColor.RED}    .   ${AnsiColor.BRIGHT_BLACK}                    o8o
+  ${AnsiColor.RED}  .o8   ${AnsiColor.BRIGHT_BLACK}                    `"'
+  ${AnsiColor.RED}.o888oo ${AnsiColor.BRIGHT_BLACK} .oooo.   oooo d8b oooo   .ooooo.  ooo. .oo.   ooo. .oo.    .oooo.
+  ${AnsiColor.RED}  888   ${AnsiColor.BRIGHT_BLACK}`P  )88b  `888""8P `888  d88' `88b `888P"Y88b  `888P"Y88b  `P  )88b
+  ${AnsiColor.RED}  888   ${AnsiColor.BRIGHT_BLACK} .oP"888   888      888  888ooo888  888   888   888   888   .oP"888
+  ${AnsiColor.RED}  888 . ${AnsiColor.BRIGHT_BLACK}d8(  888   888      888  888    .o  888   888   888   888  d8(  888
+  ${AnsiColor.RED}  "888" ${AnsiColor.BRIGHT_BLACK}`Y888""8o d888b    o888o `Y8bod8P' o888o o888o o888o o888o `Y888""8o
+
+${AnsiColor.BRIGHT_WHITE}:: tarienna GmbH :: Running Spring Boot ${spring-boot.version} ::
+:: http://www.tarienna.eu ::${AnsiColor.DEFAULT}
