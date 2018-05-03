@@ -1,6 +1,7 @@
 const ROOT_FOLDER = "ROOT";
 const FILE_SIZES = ["KiB", "MiB", "GiB", "TiB", "PiB", "EiB", "ZiB", "YiB"];
 var currentDir = '/';
+var currentDirPage = 1;
 
 $( document ).ready(function() {
 	$("#checkAll").click(function() {
@@ -19,16 +20,31 @@ $( document ).ready(function() {
         }
     });
     
-    
     document.querySelector('#selectedFiles').addEventListener('change', uploadFiles, false);
 
     $("#btnUpload").click(function(event) {
     	event.preventDefault();
     	$("#selectedFiles").trigger('click');
     });
-        
+    
+    
+    
+    var win = $(window);
+	// Each time the user scrolls
+    win.scroll(function() {
+		// End of the document reached?
+		if ($(document).height() - win.height() == win.scrollTop()) {
+			loadFiles(currentDir, ++currentDirPage);
+		}
+	});
+    
+    
 	loadFiles(currentDir);
 });
+
+function isLoading() {
+	return $("#loading:visible").length > 0;
+}
 
 function alertMessage(msg, isWarn) {
 	const msgDelay = 5000;
@@ -133,15 +149,39 @@ function deleteFiles() {
 	});
 }
 
-function loadFiles(path) {
+function loadFiles(path, page) {
+	
+	if (!isLoading()) {
+		$('#loading').show();	
+	}
+
 	currentDir = path;
 	$("input:hidden[name=uploadDir]").first().val(currentDir);
+	
+	
 	$.ajax({
 		type : "GET",
-		url :  `/api/files${path}`,
+		url :  `/api/files/`,
+		data: {
+			page: page,
+			relativePath: path
+		},
+		beforeSend: function() {
+			if (!page) {
+				$("#filesTable tbody").empty();
+				currentDirPage = 1;
+			}
+		},
 		success: function(jsonList){
 			updateBreadcrumb(path);
-			$("#filesTable tbody").empty();
+			
+			//return page counter to previous value
+			if (!jsonList || jsonList.length < 1) {
+				if (currentDirPage > 0) {
+					currentDirPage--;
+				}
+			}
+			
 			$.each(jsonList, function(i, file) {
 				var filePath = '/api/file' + currentDir + (currentDir.endsWith('/') ? '' : '/') + file.name;
 				var relativePath = path.endsWith('/') ? (path + file.name) : (path + '/' + file.name);
@@ -161,11 +201,13 @@ function loadFiles(path) {
 						<td>${file.lastModified}</td>
 					</tr>
 				`);
-				
-        });
+			});
 		},
 		error : function(e) {
 			$("#result").html(e.responseText);
+		}, 
+		complete: function() {
+			$('#loading').hide();	
 		}
 	});	
 }

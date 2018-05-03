@@ -13,7 +13,6 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -29,34 +28,40 @@ import org.springframework.web.multipart.MultipartFile;
 import org.thymeleaf.util.StringUtils;
 
 import eu.tarienna.springextplorer.conf.Constants;
+import eu.tarienna.springextplorer.conf.FileComparator;
 import eu.tarienna.springextplorer.dto.FileInfoDTO;
 import eu.tarienna.springextplorer.exception.FileDeleteException;
+import eu.tarienna.springextplorer.exception.FileNotFoundException;
 import eu.tarienna.springextplorer.exception.FileStoreException;
 import eu.tarienna.springextplorer.exception.FileUnzipException;
 
+/**
+ * @author Ramanqul
+ *
+ */
 @Service
 public class StorageService {
-	
-	private final Logger log = LoggerFactory.getLogger(this.getClass());
-	private final FileComparator FILE_COMPARATOR = new FileComparator();
-	
-	@Autowired
-	private Constants constants;
-	
-	
-	/**Unzips file to relative folder path
-	 * @param file
-	 * @param relativeDestDir
-	 * @throws FileStoreException
-	 */
-	public void unzip(MultipartFile file, String relativeDestDir) throws FileStoreException {
-	    if (!isUnderRootFolder(relativeDestDir)) {
-	        throw new FileStoreException("Upload to directory " + relativeDestDir + " is not allowed");
-	    }
+    
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
+    private final FileComparator FILE_COMPARATOR = new FileComparator();
+    
+    @Autowired
+    private Constants constants;
+    
+    
+    /**Unzips file to relative folder path
+     * @param file
+     * @param relativeDestDir
+     * @throws FileStoreException
+     */
+    public void unzip(MultipartFile file, String relativeDestDir) throws FileStoreException {
+        if (!isUnderRootFolder(relativeDestDir)) {
+            throw new FileStoreException("Upload to directory " + relativeDestDir + " is not allowed");
+        }
 
-	    Path distLocation = Paths.get(constants.getRootUploadDir() + relativeDestDir);
-	    
-	    File dir = distLocation.toFile();
+        Path distLocation = Paths.get(constants.getRootUploadDir() + relativeDestDir);
+        
+        File dir = distLocation.toFile();
         // create output directory if it doesn't exist
         if (!dir.exists()) {
             dir.mkdirs();
@@ -98,34 +103,69 @@ public class StorageService {
             throw new FileUnzipException(e);
         }
     }
-	
-	private boolean isUnderRootFolder(String relativePath) {
-	    boolean needSlash = !relativePath.startsWith("/");
-	    
-	    Path outputDirectory = Paths.get(constants.getRootUploadDir());
-	    Path inputPath =  Paths.get(constants.getRootUploadDir() + (needSlash ? "/" : "") + relativePath);
-	    
-	    return inputPath.toAbsolutePath().startsWith(outputDirectory.toAbsolutePath());
-	}
-	
-	/** Saves uploaded file unders root folder
-	 * @param file
-	 * @param relativePath
-	 * @throws FileStoreException
-	 */
-	public void store(MultipartFile file, String relativePath) throws FileStoreException{
-	    Path rootLocation = Paths.get(constants.getRootUploadDir() + relativePath);
-	    
-	    if (!isUnderRootFolder(relativePath)) {
-	        throw new FileStoreException("Upload to directory " + relativePath + " is not allowed");
-	    }
-	    
-	    try {
-            Files.copy(file.getInputStream(), rootLocation.resolve(file.getOriginalFilename()));
-        } catch (Exception e) {
-        	throw new FileStoreException(e);
+    
+    private boolean isUnderRootFolder(String relativePath) {
+        boolean needSlash = !relativePath.startsWith("/");
+        
+        Path outputDirectory = Paths.get(constants.getRootUploadDir());
+        Path inputPath =  Paths.get(constants.getRootUploadDir() + (needSlash ? "/" : "") + relativePath);
+        
+        return inputPath.toAbsolutePath().startsWith(outputDirectory.toAbsolutePath());
+    }
+    
+    /** Saves uploaded file unders root folder
+     * @param file
+     * @param relativeDirPath
+     * @throws FileStoreException
+     */
+    public void store(MultipartFile file, String relativeDirPath) throws FileStoreException{
+        Path locationDir = Paths.get(constants.getRootUploadDir() + relativeDirPath);
+        
+        if (!isUnderRootFolder(relativeDirPath)) {
+            throw new FileStoreException("Upload to directory " + relativeDirPath + " is not allowed");
         }
-	}
+        
+        try {
+            String newFileName = getNewFileName(file.getOriginalFilename(), locationDir);
+            Files.copy(file.getInputStream(), locationDir.resolve(newFileName));
+        } catch (Exception e) {
+            throw new FileStoreException(e);
+        }
+    }
+    
+    
+    /**
+     * Returns a new file name with _num suffix if file name already exists in a directory 
+     * @param fileName - uploaded file name
+     * @param locationDir - file directory
+     * @return
+     */
+    private String getNewFileName(final String fileName, Path locationDir) {
+        int num = 1;
+
+        File file = locationDir.resolve(fileName).toFile();
+
+        while(file.exists()) {
+            int dotIndex = fileName.lastIndexOf(".");
+            String newFileName = null;
+            
+            if (dotIndex > 0) {
+                String name = fileName.substring(0, dotIndex);
+                String extension = "";
+                if (dotIndex < fileName.length()) {
+                    extension = fileName.substring(dotIndex + 1);
+                }
+                newFileName = name + "_" + num + "." + extension;
+            } else {
+                newFileName = fileName + "_" + num;
+            }
+
+            file = locationDir.resolve(newFileName).toFile();
+            num++;
+        }
+
+        return file.getName();
+    }
 
     /**Returns Resource reference object to file
      * @param filename
@@ -145,10 +185,10 @@ public class StorageService {
             if (resource.exists() || resource.isReadable()) {
                 return resource;
             } else {
-            	throw new RuntimeException("FAIL!");
+                throw new FileNotFoundException(filename);
             }
         } catch (MalformedURLException e) {
-        	throw new RuntimeException("FAIL!");
+            throw new FileNotFoundException(filename);
         }
     }
 
@@ -157,7 +197,7 @@ public class StorageService {
      * @return List<FileInfoDTO> - list of files 
      * @throws FileStoreException
      */
-    public List<FileInfoDTO> loadFiles(String relativePath) throws FileStoreException {
+    public List<FileInfoDTO> loadFiles(String relativePath, int page) throws FileStoreException {
         if (StringUtils.isEmptyOrWhitespace(relativePath)) {
             return Collections.emptyList();
         }
@@ -166,37 +206,34 @@ public class StorageService {
             throw new FileStoreException("File access denined for " + relativePath);
         }
         
-        List<FileInfoDTO> resultList = null;
         
-        File[] files = new File(constants.getRootUploadDir() + relativePath).listFiles();
-        //If this pathname does not denote a directory, then listFiles() returns null. 
+        File[] allFiles = new File(constants.getRootUploadDir() + relativePath).listFiles();
+        Arrays.sort(allFiles, FILE_COMPARATOR);
 
+        List<FileInfoDTO> resultList = new ArrayList<>();;
         
-        if (files != null && files.length > 0) {
-            Arrays.sort(files, FILE_COMPARATOR);
+        int perPage = constants.getFilesNumPerPage();
+        int begin = (page - 1) * perPage;
 
-            resultList = new ArrayList<>();
-            
-            for (File file : files) {
-                FileInfoDTO dto = new FileInfoDTO();
-                dto.setName(file.getName());
-                dto.setIsFile(file.isFile());
-                dto.setFileSize(file.length());
-                LocalDateTime modifiedDate =
-                        LocalDateTime.ofInstant(Instant.ofEpochMilli(file.lastModified()), ZoneId.systemDefault());
-                
-                dto.setLastModified(modifiedDate);
-
-                resultList.add(dto);
+        for (int count = begin; count < begin + perPage; count++) {
+            if (count >= allFiles.length) {
+                break;
             }
             
-        }
-        
-        if (resultList == null || resultList.isEmpty()) {
-            return Collections.emptyList();
-        }
-        
+            File file = allFiles[count];
+            
+            FileInfoDTO dto = new FileInfoDTO();
+            dto.setName(file.getName());
+            dto.setIsFile(file.isFile());
+            dto.setFileSize(file.length());
+            LocalDateTime modifiedDate =
+                    LocalDateTime.ofInstant(Instant.ofEpochMilli(file.lastModified()), ZoneId.systemDefault());
+            
+            dto.setLastModified(modifiedDate);
 
+            resultList.add(dto);
+        }
+        
         return resultList;
     }
     
@@ -225,23 +262,4 @@ public class StorageService {
         new File(constants.getRootUploadDir()).mkdirs();
     }
     
-    /**
-     * Compares files and priorities folders as first items
-     *
-     */
-    private class FileComparator implements Comparator<File> {
-
-        @Override
-        public int compare(File o1, File o2) {
-            if (o1 != null && o1.isDirectory() ) {
-                return -1;
-            }
-            
-            if (o2 != null && o2.isDirectory()) {
-                return 1;
-            }
-            
-            return 0;
-        }
-    }
 }
