@@ -7,6 +7,7 @@
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/extplorer.css">
 
     <title>Spring Extplorer | </title>
   </head>
@@ -26,6 +27,7 @@
   </script>
 
     <div class="container">
+        <div class="sticky-top main-top">
              <div class="row mt-2">
                  <div class="col-md-12">
                      <div class="alert" id="alert">
@@ -56,21 +58,25 @@
               </ol>
             </nav>
             <hr/>
-            <table class="table table-sm table-dark" id="filesTable">
-                <thead>
-                    <tr>
-                      <th><input type="checkbox" id="checkAll"></input></th>
-                      <th style="width: 50%">Name</th>
-                      <th>Size</th>
-                      <th>Type</th>
-                      <th>Modified</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    
-                </tbody>
-            </table>
+          </div>
+        <table class="table table-sm table-dark" id="filesTable">
+            <thead>
+                <tr>
+                  <th><input type="checkbox" id="checkAll"></input></th>
+                  <th style="width: 50%">Name</th>
+                  <th>Size</th>
+                  <th>Type</th>
+                  <th>Modified</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+            </tbody>
+        </table>
+        <div class="col-xs-1" align="center">
+            <div class="loader" id="loading" style="display:none"></div>
         </div>
+    </div>
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
